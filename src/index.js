@@ -10,11 +10,14 @@ if (require('electron-squirrel-startup')) {
 const createWindow = () => {
   // Create the browser window.
   const mainWindow = new BrowserWindow({
-    width: 920,
-    height: 700,
+    width: 1000,
+    // width: 500,
+    height: 600,
     webPreferences: {
       nodeIntegration: true,
-      contextIsolation: false
+      contextIsolation: false,
+      devTools: true,
+      enableRemoteModule: true,
     }
   });
 
@@ -34,6 +37,9 @@ app.on('ready', createWindow);
 // for applications and their menu bar to stay active until the user quits
 // explicitly with Cmd + Q.
 app.on('window-all-closed', () => {
+  // stop processing if it's running
+  // stopCode();
+
   if (process.platform !== 'darwin') {
     app.quit();
   }
@@ -49,3 +55,18 @@ app.on('activate', () => {
 
 // In this file you can include the rest of your app's specific main process
 // code. You can also put them in separate files and import them here.
+
+function stopCode(){
+  // get childProcess from localStorage
+  let childProcess_pid = getConfigJson('processing_pid');
+
+  if (childProcess_pid) {
+    kill(childProcess_pid);
+  }
+}
+
+function getConfigJson(attribute){
+  let config_file = path.join(__dirname, 'config', 'config.json');
+  let config = JSON.parse(fs.readFileSync(config_file));
+  return config[attribute];
+}
