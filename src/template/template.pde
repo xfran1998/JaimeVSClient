@@ -11,10 +11,10 @@ Module[] mods;
 void setup() {
   // Don't change
   // ********************************
-  size(640, 400, SVG, "img_output/frame.svg");
+  size(600, 500, SVG, "img_output/frame.svg");
   // ********************************
   
-  print("Hola Jaimedasdasd");
+  print("Hola Jaime");
 
   noStroke();
   int wideCount = width / unit;

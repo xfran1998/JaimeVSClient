@@ -9,6 +9,7 @@ let processing_path = null;
 let childProcess = null;
 let file_path = null;
 let file_name = null;
+let int_display = null;
 // const socket = io("http://localhost:5000");
 
 $ = selector => document.querySelector(selector);
@@ -90,7 +91,7 @@ function run_socket(room_name){
 }
 
 // user variables
-const frame_rate = 30;
+const frame_rate = 60;
 const premium_frame_rate = 60;
 const interval_time = 1000/frame_rate;
 
@@ -111,7 +112,7 @@ function write_code(data) {
 
   console.log(data);
 
-  fs.writeFileSync(dir_name, data.code, (err) => {
+  fs.writeFile(dir_name, data.code, (err) => {
     if (err) throw err;
     console.log("The file has been saved!");
   });
@@ -176,7 +177,7 @@ function run_code(socket, room_name){
   if (childProcess == null)  return;
 
   // TODO: DISPLAY IMAGE, set it to room attribute so it can stopped later on
-  var int_display = setInterval(() => {
+  int_display = setInterval(() => {
       // read frame.svg from template/img_output
       fs.readFile(path.join(__dirname, room_name, 'img_output', 'frame.svg'), function(err, data) {
           if (err) {
@@ -199,7 +200,9 @@ function run_code(socket, room_name){
           // covert to base64
           var base64data = new Buffer(data).toString('base64');
           // console.log('sent');
-          socket.emit('image_client', base64data); // sending image to server
+          // socket.emit('image_client', base64data); // sending image to server
+          socket.compress(true).emit('image_client', base64data); // sending image to server
+          console.log('img send');
       });
       // emit image to socket
   }, interval_time);
@@ -215,6 +218,9 @@ function stopCode(){
   
   // remove child pid to localStorage
   setConfigJson('processing_pid', null);
+
+  if (int_display) clearInterval(int_display);
+  int_display = null;
 }
 
 function addListenerFolderPopup(){
