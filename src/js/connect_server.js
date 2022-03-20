@@ -109,7 +109,9 @@ const interval_time = 1000/frame_rate;
 function write_code(data) {
   const dir_name = path.join(__dirname, 'template', 'template.pde');
 
-  fs.writeFile(dir_name, data.code, (err) => {
+  console.log(data);
+
+  fs.writeFileSync(dir_name, data.code, (err) => {
     if (err) throw err;
     console.log("The file has been saved!");
   });
@@ -146,6 +148,7 @@ function run_script(command, args, cwd, time_out=null, callback) {
 
   // set child pid to configjson
   setConfigJson('processing_pid', child.pid);
+  console.log("Child pid: " + child.pid);
 
   return child;
 }
@@ -177,6 +180,7 @@ function run_code(socket, room_name){
       // read frame.svg from template/img_output
       fs.readFile(path.join(__dirname, room_name, 'img_output', 'frame.svg'), function(err, data) {
           if (err) {
+              console.log('Error reading file: ' + err);
               // if still not sending image reset all finish timers, so it's time_out when start sending image to the client
               debounce(() => {
                   // kill process
@@ -250,7 +254,6 @@ function setConfigJson(attribute, value){
   config[attribute] = value;
   fs.writeFileSync(config_file, JSON.stringify(config));
   console.log("Config file updated.");
-  processing_path = file_path;
 }
 
 function getConfigJson(attribute){
@@ -279,7 +282,8 @@ function popupFolderTemplate(){
   let pop_up_container = document.createElement('div');
   pop_up_container.classList.add('pop-up');
   pop_up_container.innerHTML = `
-    <h3>Processing folder not setted</h3>
+    <h3>Select processing-java file</h3>
+    <p> <span class="warning-span">IMPORTANT: Must be <span class="important-span">processing-java</span> not procesing!!</span></p>
     <div class="folder-container">
       <label for="file-input" class="input-btn"><i class="fa-solid fa-folder"></i></label>
       <input type="file" id="file-input" class="hidden">

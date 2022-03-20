@@ -87,8 +87,14 @@ body {
   transform: translate(-50%, -50%);
 }
 
-.warning{
-  border: 3px solid rgb(240, 102, 84);
+.important-span{
+  color: rgb(240, 102, 84);
+  margin-bottom: 20px;
+}
+
+.warning-span{
+  font-size: 0.8rem;
+  color: rgb(76, 78, 80);
 }
 
 .button-container button{
@@ -115,7 +121,7 @@ body {
 }
 
 .pop-up h3{
-  margin: 10px 10px 20px 10px;
+  margin: 10px 10px 3px 10px;
   font-size: 1.3rem;
   font-weight: 600;
 }

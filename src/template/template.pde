@@ -14,7 +14,7 @@ void setup() {
   size(640, 400, SVG, "img_output/frame.svg");
   // ********************************
   
-  print("Hola Jaime");
+  print("Hola Jaimedasdasd");
 
   noStroke();
   int wideCount = width / unit;
