@@ -4,6 +4,11 @@ const path = require('path');
 const kill = require("tree-kill");
 const { spawnSync } = require('child_process');
 
+const is_Dev = false;
+// remove last two folders of path
+const src_path = path.join(path.dirname(path.dirname(path.dirname((__dirname)))), 'src');
+const root_dir = getRootDir();
+
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
 if (require('electron-squirrel-startup')) {
   // eslint-disable-line global-require
@@ -13,15 +18,15 @@ if (require('electron-squirrel-startup')) {
 const createWindow = () => {
   // Create the browser window.
   const mainWindow = new BrowserWindow({
-    width: 1000,
-    // width: 500,
+    // width: 1000,
+    width: 680,
     height: 600,
     webPreferences: {
       nodeIntegration: true,
       contextIsolation: false,
       enableRemoteModule: true,
-      // devTools: false,
-      devTools: true,
+      devTools: false,
+      // devTools: true,
     },
     resizable: false,
     autoHideMenuBar: true,
@@ -31,7 +36,7 @@ const createWindow = () => {
   mainWindow.loadFile(path.join(__dirname, 'index.html'));
 
   // Open the DevTools.
-  mainWindow.webContents.openDevTools();
+  // mainWindow.webContents.openDevTools();
 };
 
 // This method will be called when Electron has finished
@@ -121,7 +126,18 @@ function stopCode(){
 }
 
 function getConfigJson(attribute){
-  let config_file = path.join(__dirname, 'config', 'config.json');
+  let config_file = path.join(root_dir, 'config', 'config.json');
   let config = JSON.parse(fs.readFileSync(config_file));
   return config[attribute];
+}
+
+
+
+function getRootDir(){
+  if (is_Dev){
+    return __dirname;
+  }
+  else{
+    return src_path;
+  }
 }

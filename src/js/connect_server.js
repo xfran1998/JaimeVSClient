@@ -5,6 +5,16 @@ const child_process = require('child_process');
 // const { platform } = require("os");
 const path = require('path');
 
+const is_Dev = false;
+// remove last two folders of path
+const src_path = path.join(path.dirname(path.dirname(path.dirname((__dirname)))), 'src');
+const root_dir = getRootDir();
+
+console.log("Starting...");
+console.log('src_path: ' + src_path);
+console.log('__dirname: ' + __dirname);
+
+
 let processing_path = null;
 let childProcess = null;
 let file_path = null;
@@ -108,7 +118,7 @@ const interval_time = 1000/frame_rate;
 // });
 
 function write_code(data) {
-  const dir_name = path.join(__dirname, 'template', 'template.pde');
+  let dir_name = path.join(root_dir, 'template', 'template.pde');
 
   console.log(data);
 
@@ -170,7 +180,8 @@ function run_code(socket, room_name){
   var time_out = 120000; // 2 minutes
   // console.log('running on: ', process.platform);
 
-  childProcess = run_script(processing_path, ["--force", `--sketch=${path.join(__dirname, room_name)}`, `--output=${path.join(__dirname, room_name,'out')}`, "--run"], {cwd:`${path.join(__dirname, room_name)}`}, time_out, function(buf) {
+
+  childProcess = run_script(processing_path, ["--force", `--sketch=${path.join(root_dir, room_name)}`, `--output=${path.join(root_dir, room_name,'out')}`, "--run"], {cwd:`${path.join(root_dir, room_name)}`}, time_out, function(buf) {
       socket.emit('processing_output_client', buf); // sending prints to server
   });
     
@@ -179,7 +190,7 @@ function run_code(socket, room_name){
   // TODO: DISPLAY IMAGE, set it to room attribute so it can stopped later on
   int_display = setInterval(() => {
       // read frame.svg from template/img_output
-      fs.readFile(path.join(__dirname, room_name, 'img_output', 'frame.svg'), function(err, data) {
+      fs.readFile(path.join(root_dir, room_name, 'img_output', 'frame.svg'), function(err, data) {
           if (err) {
               console.log('Error reading file: ' + err);
               // if still not sending image reset all finish timers, so it's time_out when start sending image to the client
@@ -255,15 +266,20 @@ function addListenerFolderPopup(){
 }
 
 function setConfigJson(attribute, value){
-  let config_file = path.join(__dirname, 'config', 'config.json');
+  // get real path where app is installed
+    
+  const config_file = path.join(root_dir, 'config', 'config.json');
+
   let config = JSON.parse(fs.readFileSync(config_file));
   config[attribute] = value;
   fs.writeFileSync(config_file, JSON.stringify(config));
+  console.log(config);
   console.log("Config file updated.");
 }
 
 function getConfigJson(attribute){
-  let config_file = path.join(__dirname, 'config', 'config.json');
+  const config_file = path.join(root_dir, 'config', 'config.json');
+  
   let config = JSON.parse(fs.readFileSync(config_file));
   return config[attribute];
 }
@@ -303,4 +319,13 @@ function popupFolderTemplate(){
   document.body.appendChild(pop_up_container);
 
   addListenerFolderPopup();
+}
+
+function getRootDir(){
+  if (is_Dev){
+    return __dirname;
+  }
+  else{
+    return src_path;
+  }
 }
