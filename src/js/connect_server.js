@@ -101,7 +101,7 @@ function run_socket(room_name){
 }
 
 // user variables
-const frame_rate = 60;
+const frame_rate = 100;
 const premium_frame_rate = 60;
 const interval_time = 1000/frame_rate;
 

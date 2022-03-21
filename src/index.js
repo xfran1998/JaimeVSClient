@@ -42,6 +42,8 @@ const createWindow = () => {
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
+app.commandLine.appendSwitch("disable-renderer-backgrounding"); // foreground performance augmentation
+app.commandLine.appendSwitch("disable-background-timer-throttling"); // foreground performance augmentation
 app.on('ready', createWindow);
 
 // Quit when all windows are closed, except on macOS. There, it's common
