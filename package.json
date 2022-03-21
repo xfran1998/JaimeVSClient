@@ -1,7 +1,7 @@
 {
   "name": "jaimevs_client",
   "productName": "JaimeVS Client",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Desktop client for running processing in JaimeVS",
   "main": "src/index.js",
   "scripts": {
@@ -10,7 +10,7 @@
     "make": "electron-forge make",
     "publish": "electron-forge publish",
     "lint": "echo \"No linting configured\"",
-    "dist": "electron-builder"
+    "build": "electron-builder"
   },
   "keywords": [],
   "author": {
